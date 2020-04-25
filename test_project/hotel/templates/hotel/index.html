@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index page</title>
+</head>
+<body>
+    <h1>Index page</h1>
+    {% for message in messages %}
+        {{message}} <br>
+    {% endfor %}
+    Hello, {{request.user.username}} <br>
+    <a href="{% url 'change_password' %}">Change password</a> <br>
+    <a href="{% url 'logout' %}">Logout</a> <br>
+</body>
+</html>
