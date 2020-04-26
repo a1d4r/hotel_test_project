@@ -12,11 +12,11 @@
             {{field.label}}
             {{field}} <br>
         {% endfor %}
-        <input type="submit" name="login">
-        <br>
-        {% for message in messages %}
-            {{message}} <br>
-        {% endfor %}
+        <button type="submit">Login</button>
     </form>
+    <br>
+    {% for message in messages %}
+        {{message}} <br>
+    {% endfor %}
 </body>
 </html>

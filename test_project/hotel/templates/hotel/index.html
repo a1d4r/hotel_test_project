@@ -10,6 +10,7 @@
         {{message}} <br>
     {% endfor %}
     Hello, {{request.user.username}} <br>
+    <a href="{% url 'detail' %}">API</a> <br>
     <a href="{% url 'change_password' %}">Change password</a> <br>
     <a href="{% url 'logout' %}">Logout</a> <br>
 </body>
