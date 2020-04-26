@@ -4,13 +4,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
-from rest_framework.response import Response
-
-from .models import Hotel
-from .serializers import *
-
 
 @login_required(login_url='login')
 def index_page(request):
@@ -56,31 +49,5 @@ def change_password_page(request):
     form = PasswordChangeForm(request.user)
     context = {'form': form}
     return render(request, 'hotel/change_password.html', context)
-
-
-@api_view(['GET'])
-def api_overview(request):
-    api_urls = {
-        'List hotels': '/hotels/',
-    }
-    return Response(api_urls)
-
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def hotel_list(request):
-    hotels = Hotel.objects.all()
-    serializer = HotelSerializer(hotels, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-@permission_classes([IsAdminUser])
-def user_details(request, pk):
-    users = User.objects.get(id=pk)
-    serializer = UserSerializer(users, many=False)
-    return Response(serializer.data)
-
-
 
 
