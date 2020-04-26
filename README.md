@@ -37,9 +37,10 @@ where X - number from 1 to 4. Users 1, 2, 3 are assigned hotels with correspondi
     "Room category list": "/hotels/<hotel_id>/room-categories/",
     "Booking detail": "/hotels/<hotel_id>/bookings/<booking_id>",
     "Booking list": [
-        "/hotels/<hotel_id>/bookings",
+        "/hotels/<hotel_id>/bookings/",
         "/hotels/<hotel_id>/rooms/<room_id>/bookings/"
-    ]
+    ],
+    "Create bookings': "/hotels/<hotel_id>/bookings/",
 }
 ```
 ## Examples

@@ -31,6 +31,7 @@ def api_detail(request):
             '/hotels/<hotel_id>/bookings',
             '/hotels/<hotel_id>/rooms/<room_id>/bookings/',
         },
+        'Create bookings': '/hotels/<hotel_id>/bookings/',
     }
     return Response(api_urls)
 
