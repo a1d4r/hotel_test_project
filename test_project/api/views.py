@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
 
+from .permissions import IsHotelRelated
 from hotel.models import *
 from .serializers import *
 
@@ -34,6 +35,7 @@ def user_detail(request, user_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
 def room_category_list(request, hotel_id):
     # Return 404 if hotel does not exist
     get_object_or_404(Hotel.objects.all(), pk=hotel_id)
@@ -44,6 +46,7 @@ def room_category_list(request, hotel_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
 def hotel_room_list(request, hotel_id):
     # Return 404 if hotel does not exist
     get_object_or_404(Hotel.objects.all(), pk=hotel_id)
@@ -54,6 +57,7 @@ def hotel_room_list(request, hotel_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
 def category_room_list(request, hotel_id, room_category_id):
     room_category = get_object_or_404(RoomCategory.objects.all(), pk=room_category_id)
     # if room category is not in the specified hotel
@@ -66,6 +70,7 @@ def category_room_list(request, hotel_id, room_category_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
 def hotel_booking_list(request, hotel_id):
     # Return 404 if hotel does not exist
     get_object_or_404(Hotel.objects.all(), pk=hotel_id)
@@ -76,6 +81,7 @@ def hotel_booking_list(request, hotel_id):
 
 
 @api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
 def room_booking_list(request, hotel_id, room_id):
     room = get_object_or_404(Room.objects.all(), pk=room_id)
     # if room_id is not in the specified hotel
@@ -85,3 +91,12 @@ def room_booking_list(request, hotel_id, room_id):
     bookings = room.booking_set.all()
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser | IsHotelRelated])
+def room_detail(request, hotel_id, room_id):
+    room = get_object_or_404(Room.objects.all(), pk=room_id)
+    serializer = RoomSerializer(room, many=False)
+    return Response(serializer.data)
+
