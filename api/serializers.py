@@ -31,3 +31,17 @@ class BookingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booking
         fields = '__all__'
+        validator = []
+
+    def validate(self, data):
+        """
+        Check that the start is before the stop.
+        """
+        overlapping = Booking.objects.filter(
+            date_check_in__lt=data['date_check_out'],
+            date_check_out__gt=data['date_check_in'],
+            room=data['room']
+        )
+        if overlapping.exists():
+            raise serializers.ValidationError("The time interval overlaps with another one")
+        return data

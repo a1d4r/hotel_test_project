@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import get_object_or_404
+from rest_framework import status
 
 from .permissions import IsHotelRelated
 from hotel.models import *
@@ -141,21 +142,29 @@ def hotel_booking_detail(request, hotel_id, booking_id):
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAdminUser | IsHotelRelated])
 def hotel_booking_list(request, hotel_id):
-    # Return 404 if hotel does not exist
-    get_object_or_404(Hotel.objects.all(), pk=hotel_id)
+    if request.method == 'GET':
+        # Return 404 if hotel does not exist
+        get_object_or_404(Hotel.objects.all(), pk=hotel_id)
 
-    bookings = Booking.objects.filter(room__room_category__hotel__id=hotel_id)
-    serializer = BookingSerializer(bookings, many=True)
-    return Response(serializer.data)
+        bookings = Booking.objects.filter(room__room_category__hotel__id=hotel_id)
+        serializer = BookingSerializer(bookings, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = BookingSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser | IsHotelRelated])
 def room_booking_list(request, hotel_id, room_id):
     room = get_object_or_404(Room.objects.all(), pk=room_id)
+
     # if room_id is not in the specified hotel
     if room.room_category.hotel.id != hotel_id:
         raise Http404
@@ -163,3 +172,4 @@ def room_booking_list(request, hotel_id, room_id):
     bookings = room.booking_set.all()
     serializer = BookingSerializer(bookings, many=True)
     return Response(serializer.data)
+
